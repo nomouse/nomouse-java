@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <description>Spring公共配置</description>
+    <!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
+    <context:component-scan base-package="nomouse.spring">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <!-- 以静态变量保存ApplicationContext -->
+    <bean class="nomouse.spring.context.SpringContextHolder"
+          lazy-init="false"/>
+
+
+    <!--<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">-->
+        <!--<property name="dataSource" ref="dataSource"></property>-->
+    <!--</bean>-->
+
+
+    <beans profile="production">
+        <context:property-placeholder
+                ignore-resource-not-found="true" location="classpath*:/application.properties"/>
+
+        <!-- 数据源配置,使用应用内的Tomcat JDBC连接池 -->
+        <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
+              destroy-method="close">
+            <!-- Connection Info -->
+            <property name="driverClassName" value="${jdbc.driver}"/>
+            <property name="url" value="${jdbc.url}"/>
+            <property name="username" value="${jdbc.username}"/>
+            <property name="password" value="${jdbc.password}"/>
+            <property name="maxActive" value="${jdbc.pool.maxActive}"/>
+            <property name="maxIdle" value="${jdbc.pool.maxIdle}"/>
+            <property name="defaultAutoCommit" value="${jdbc.defaultAutoCommit}"/>
+            <property name="validationQuery" value="${jdbc.validationQuery}"/>
+            <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+            <property name="validationInterval" value="${jdbc.validationInterval}"/>
+            <!-- 连接Idle半个小时后超时，每15分钟检查一次 -->
+            <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+            <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+        </bean>
+    </beans>
+
+    <beans profile="development">
+        <context:property-placeholder
+                ignore-resource-not-found="true" location="classpath*:/application.devlopment.properties"/>
+
+        <!-- 数据源配置,使用应用内的Tomcat JDBC连接池 -->
+        <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
+              destroy-method="close">
+            <!-- Connection Info -->
+            <property name="driverClassName" value="${jdbc.driver}"/>
+            <property name="url" value="${jdbc.url}"/>
+            <property name="username" value="${jdbc.username}"/>
+            <property name="password" value="${jdbc.password}"/>
+            <property name="maxActive" value="${jdbc.pool.maxActive}"/>
+            <property name="maxIdle" value="${jdbc.pool.maxIdle}"/>
+            <property name="defaultAutoCommit" value="${jdbc.defaultAutoCommit}"/>
+            <property name="validationQuery" value="${jdbc.validationQuery}"/>
+            <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+            <property name="validationInterval" value="${jdbc.validationInterval}"/>
+            <!-- 连接Idle半个小时后超时，每15分钟检查一次 -->
+            <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+            <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+        </bean>
+    </beans>
+
+    <beans profile="local">
+        <context:property-placeholder
+                ignore-resource-not-found="true" location="classpath*:/application.local.properties"/>
+
+        <!-- 数据源配置,使用应用内的Tomcat JDBC连接池 -->
+        <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
+              destroy-method="close">
+            <!-- Connection Info -->
+            <property name="driverClassName" value="${jdbc.driver}"/>
+            <property name="url" value="${jdbc.url}"/>
+            <property name="username" value="${jdbc.username}"/>
+            <property name="password" value="${jdbc.password}"/>
+            <property name="maxActive" value="${jdbc.pool.maxActive}"/>
+            <property name="maxIdle" value="${jdbc.pool.maxIdle}"/>
+            <property name="defaultAutoCommit" value="${jdbc.defaultAutoCommit}"/>
+            <property name="validationQuery" value="${jdbc.validationQuery}"/>
+            <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+            <property name="validationInterval" value="${jdbc.validationInterval}"/>
+            <!-- 连接Idle半个小时后超时，每15分钟检查一次 -->
+            <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+            <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+        </bean>
+    </beans>
+
+
+    <!--JPA
+  <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+        p:dataSource-ref="dataSource">
+      <property name="packagesToScan" value="com.lianxi.api.common.model"/>
+      <property name="jpaProperties">
+          <props>
+              <prop key="javax.persistence.validation.mode">none</prop>
+              <prop key="hibernate.show_sql">true</prop>
+              <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+          </props>
+      </property>
+      <property name="jpaVendorAdapter">
+          <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+      </property>
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+      <property name="entityManagerFactory" ref="entityManagerFactory"/>
+  </bean>
+
+  <jpa:repositories base-package="nomouse.spring.dao"
+                    transaction-manager-ref="transactionManager"
+                    entity-manager-factory-ref="entityManagerFactory"/>
+  -->
+
+
+    <!-- transation
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"
+                          proxy-target-class="true"/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    -->
+
+
+</beans>
