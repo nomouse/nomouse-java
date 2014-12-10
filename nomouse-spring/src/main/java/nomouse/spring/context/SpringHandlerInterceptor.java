@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by nomouse on 2014/12/9.
  */
-public class SpringAuthInterceptor extends HandlerInterceptorAdapter {
+public class SpringHandlerInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 

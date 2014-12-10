@@ -3,10 +3,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
   http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/context
-  http://www.springframework.org/schema/context/spring-context.xsd">
+  http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <description>Spring公共配置</description>
     <!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
@@ -17,13 +18,24 @@
     </context:component-scan>
 
     <!-- 以静态变量保存ApplicationContext -->
-    <bean class="nomouse.spring.context.SpringContextHolder"
+    <bean class="nomouse.spring.context.SpringContextAware"
           lazy-init="false"/>
 
 
-    <!--<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">-->
-        <!--<property name="dataSource" ref="dataSource"></property>-->
-    <!--</bean>-->
+    <!-- transation
+    -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"
+                          proxy-target-class="true"/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
 
 
     <beans profile="production">
@@ -124,16 +136,6 @@
                     transaction-manager-ref="transactionManager"
                     entity-manager-factory-ref="entityManagerFactory"/>
   -->
-
-
-    <!-- transation
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    <tx:annotation-driven transaction-manager="transactionManager"
-                          proxy-target-class="true"/>
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
-    -->
 
 
 </beans>
