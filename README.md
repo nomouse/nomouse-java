@@ -1,4 +1,4 @@
 nomouse-java
 ============
 
-java project, provider apis with spring-mvc
+java project, provide apis with spring-mvc
