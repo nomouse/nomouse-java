@@ -1,7 +1,7 @@
-package nomouse.spring.controller;
+package nomouse.spring.web;
 
-import nomouse.spring.param.Address;
-import nomouse.spring.param.User;
+import nomouse.spring.web.param.Address;
+import nomouse.spring.web.param.User;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

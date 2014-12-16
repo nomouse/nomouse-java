@@ -3,11 +3,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
   http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/context
-  http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+  http://www.springframework.org/schema/context/spring-context.xsd
+  http://www.springframework.org/schema/aop
+  http://www.springframework.org/schema/aop/spring-aop.xsd
+  http://www.springframework.org/schema/tx
+  http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <description>Spring公共配置</description>
     <!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
@@ -22,16 +28,37 @@
           lazy-init="false"/>
 
 
-    <!-- transation
+    <!--JPA @Entity @Repository
     -->
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="nomouse.spring.entity"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="javax.persistence.validation.mode">none</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+            </props>
+        </property>
+
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
     </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <jpa:repositories base-package="nomouse.spring.repository"
+                      transaction-manager-ref="transactionManager"
+                      entity-manager-factory-ref="entityManagerFactory"/>
 
     <tx:annotation-driven transaction-manager="transactionManager"
                           proxy-target-class="true"/>
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource"></property>
@@ -110,32 +137,10 @@
         </bean>
     </beans>
 
-
-    <!--JPA
-  <bean id="entityManagerFactory"
-        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-        p:dataSource-ref="dataSource">
-      <property name="packagesToScan" value="com.lianxi.api.common.model"/>
-      <property name="jpaProperties">
-          <props>
-              <prop key="javax.persistence.validation.mode">none</prop>
-              <prop key="hibernate.show_sql">true</prop>
-              <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
-          </props>
-      </property>
-      <property name="jpaVendorAdapter">
-          <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
-      </property>
-  </bean>
-
-  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-      <property name="entityManagerFactory" ref="entityManagerFactory"/>
-  </bean>
-
-  <jpa:repositories base-package="nomouse.spring.dao"
-                    transaction-manager-ref="transactionManager"
-                    entity-manager-factory-ref="entityManagerFactory"/>
-  -->
-
+    <!-- transation
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    -->
 
 </beans>
