@@ -34,6 +34,13 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="nomouse.spring.context.SpringHandlerInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <!-- mvc
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
         <property name="interceptors">
