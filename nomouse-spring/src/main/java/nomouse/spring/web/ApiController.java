@@ -1,9 +1,9 @@
-package nomouse.spring.controller;
+package nomouse.spring.web;
 
-import nomouse.spring.controller.dto.AccessToken;
-import nomouse.spring.controller.dto.Res;
-import nomouse.spring.controller.param.Req;
-import nomouse.spring.controller.param.UserParam;
+import nomouse.spring.web.dto.Token;
+import nomouse.spring.web.dto.Res;
+import nomouse.spring.web.param.Req;
+import nomouse.spring.web.param.UserParam;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -33,11 +33,11 @@ public class ApiController {
         }
         System.out.println(userParam);
 
-        Res<AccessToken> response = new Res<AccessToken>();
-        AccessToken accessToken = new AccessToken();
+        Res<Token> response = new Res<Token>();
+        Token token = new Token();
         response.setCode(1);
         response.setMsg("成功");
-        response.setResult(accessToken);
+        response.setResult(token);
 
         return response;
     }

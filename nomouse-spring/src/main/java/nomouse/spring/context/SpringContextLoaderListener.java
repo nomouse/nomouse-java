@@ -4,6 +4,9 @@ import org.springframework.web.context.ContextLoaderListener;
 
 import javax.servlet.ServletContextEvent;
 
+/**
+ * 监听web容器启动事件
+ */
 public class SpringContextLoaderListener extends ContextLoaderListener {
 
     @Override

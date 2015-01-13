@@ -1,4 +1,4 @@
-package nomouse.spring.controller.param;
+package nomouse.spring.web.param;
 
 import javax.validation.constraints.NotNull;
 
