@@ -1,16 +1,16 @@
-package nomouse.spring.web;
+package nomouse.spring.controller;
 
-import nomouse.spring.web.param.Address;
-import nomouse.spring.web.param.User;
+import nomouse.spring.controller.dto.AccessToken;
+import nomouse.spring.controller.dto.Res;
+import nomouse.spring.controller.param.Req;
+import nomouse.spring.controller.param.UserParam;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * Created by nomouse on 2014/12/8.
@@ -19,31 +19,27 @@ import java.util.Map;
 @RequestMapping()
 public class ApiController {
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Object getUser(@RequestBody User<Address> body) {
-
-        System.out.println(body);
-
-        Map map = new HashMap();
-        map.put("id", 1);
-        map.put("name", "1");
-        map.put("address", "1");
-
-        return map;
+    @ModelAttribute("req")
+    public Req getReq(HttpServletRequest request) {
+        return (Req) request.getAttribute("req");
     }
 
-    @RequestMapping(value = "/user2", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/token", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Object getUser2(@RequestBody User<Address> body) {
+    public Object tokenGet(@Valid @RequestBody UserParam userParam, @ModelAttribute("req") Req req, BindingResult bindingResult) {
 
-        System.out.println(body);
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getErrorCount());
+        }
+        System.out.println(userParam);
 
-        Map map = new HashMap();
-        map.put("id", 1);
-        map.put("name", "1");
-        map.put("address", "1");
+        Res<AccessToken> response = new Res<AccessToken>();
+        AccessToken accessToken = new AccessToken();
+        response.setCode(1);
+        response.setMsg("成功");
+        response.setResult(accessToken);
 
-        return map;
+        return response;
     }
+
 }
