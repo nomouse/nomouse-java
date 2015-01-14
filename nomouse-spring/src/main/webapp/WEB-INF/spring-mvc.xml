@@ -21,7 +21,7 @@
     <!-- 定义无需Controller的url<->view直接映射 -->
     <mvc:view-controller path="/" view-name="index"/>
 
-    <!-- mvc
+    <!--spring-mvc annotation core
     -->
     <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" validator="validator">
         <mvc:message-converters register-defaults="true">
@@ -34,6 +34,8 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <!--spring-mvc Interceptor
+    -->
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
@@ -41,31 +43,8 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
-    <!-- mvc
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-        <property name="interceptors">
-            <list>
-                <bean class="nomouse.spring.context.SpringAuthInterceptor"></bean>
-            </list>
-        </property>
-        <property name="contentNegotiationManager" ref="contentNegotiationManager">
-        </property>
-    </bean>
 
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-        <property name="messageConverters">
-            <list>
-                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                    <constructor-arg value="UTF-8"/>
-                </bean>
-                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                    <property name="prettyPrint" value="true"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-    -->
-
+    <!--jsr303 validator hibernate impl-->
     <bean id="validator"
           class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
@@ -98,5 +77,29 @@
         </property>
     </bean>
 
+    <!-- mvc
+   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+       <property name="interceptors">
+           <list>
+               <bean class="nomouse.spring.context.SpringAuthInterceptor"></bean>
+           </list>
+       </property>
+       <property name="contentNegotiationManager" ref="contentNegotiationManager">
+       </property>
+   </bean>
+
+   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+       <property name="messageConverters">
+           <list>
+               <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                   <constructor-arg value="UTF-8"/>
+               </bean>
+               <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                   <property name="prettyPrint" value="true"/>
+               </bean>
+           </list>
+       </property>
+   </bean>
+   -->
 
 </beans>
