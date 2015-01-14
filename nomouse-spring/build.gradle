@@ -30,11 +30,11 @@ dependencies {
     compile("org.springframework:spring-web:${springVersion}")
     compile("org.springframework:spring-webmvc:${springVersion}")
 
-    //compile("org.springframework.data:spring-data-jpa:${springJpaVersion}")
-    //compile("org.hibernate:hibernate-core:${hibernateVersion}")
-    //compile("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
-    //compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
-    //compile("org.hibernate.javax.persistence:hibernate-jpa-2.0-api:${hibernateJpaVersion}")
+    compile("org.springframework.data:spring-data-jpa:${springJpaVersion}")
+    compile("org.hibernate:hibernate-core:${hibernateVersion}")
+    compile("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
+    compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
+    compile("org.hibernate.javax.persistence:hibernate-jpa-2.0-api:${hibernateJpaVersion}")
 
     //compile("com.whalin:Memcached-Java-Client:${memcachedVersion}")
 
