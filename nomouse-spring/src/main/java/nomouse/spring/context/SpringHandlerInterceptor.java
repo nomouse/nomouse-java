@@ -1,5 +1,6 @@
 package nomouse.spring.context;
 
+import nomouse.lang.StringUtils;
 import nomouse.spring.web.param.Req;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -16,14 +17,20 @@ public class SpringHandlerInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        System.out.println(request.getContextPath());
-        request.getHeaderNames();
+        String api = request.getContextPath();
+        String userAgent = request.getHeader("User-Agent");
 
-        Req req = new Req();
-        request.setAttribute("req", req);
+        if (StringUtils.isEmpty(userAgent)) {
+            return false;
+        } else {
+            String[] reqArray = userAgent.split(";");
+            String token = reqArray[0];
 
-        return super.preHandle(request, response, handler);
+            Req req = new Req();
+            request.setAttribute("req", req);
 
+            return super.preHandle(request, response, handler);
+        }
     }
 
     @Override

@@ -1,7 +1,7 @@
 package nomouse.spring.web;
 
-import nomouse.spring.web.dto.Token;
 import nomouse.spring.web.dto.Res;
+import nomouse.spring.web.dto.Token;
 import nomouse.spring.web.param.Req;
 import nomouse.spring.web.param.UserParam;
 import org.springframework.http.MediaType;
