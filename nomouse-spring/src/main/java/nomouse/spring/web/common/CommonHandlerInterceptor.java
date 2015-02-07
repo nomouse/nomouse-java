@@ -1,4 +1,4 @@
-package nomouse.spring.context;
+package nomouse.spring.web.common;
 
 import nomouse.lang.StringUtils;
 import nomouse.spring.web.param.Req;
@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
  * 全局拦截器,进行用户认证和接口访问记录
  */
 @Component
-public class SpringHandlerInterceptor extends HandlerInterceptorAdapter {
+public class CommonHandlerInterceptor extends HandlerInterceptorAdapter {
 
-    public static final String API_IDENTIFY = "Nomouse";
+    public static final String API_IDENTIFY = "Lianxi";
     public static final String API_TOKEN_GET = "/token";
 
     @Override

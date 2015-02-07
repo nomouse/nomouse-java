@@ -15,10 +15,10 @@ import javax.validation.Valid;
  * Created by nomouse on 2014/12/8.
  */
 @Controller
-@RequestMapping(value = "/token", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping()
 public class TokenController extends BaseController {
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/token", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Object get(@Valid @RequestBody UserParam userParam, @ModelAttribute("req") Req req, BindingResult bindingResult) {
 
@@ -27,7 +27,7 @@ public class TokenController extends BaseController {
         }
         System.out.println(userParam);
 
-        Res<Token> response = new Res<Token>();
+        Res<Token> response = new Res<>();
         Token token = new Token();
         response.setCode(1);
         response.setMsg("成功");
@@ -35,59 +35,4 @@ public class TokenController extends BaseController {
 
         return response;
     }
-
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public Object post(@Valid @RequestBody UserParam userParam, @ModelAttribute("req") Req req, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getErrorCount());
-        }
-        System.out.println(userParam);
-
-        Res<Token> response = new Res<Token>();
-        Token token = new Token();
-        response.setCode(1);
-        response.setMsg("成功");
-        response.setResult(token);
-
-        return response;
-    }
-
-    @RequestMapping(method = RequestMethod.DELETE)
-    @ResponseBody
-    public Object delete(@Valid @RequestBody UserParam userParam, @ModelAttribute("req") Req req, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getErrorCount());
-        }
-        System.out.println(userParam);
-
-        Res<Token> response = new Res<Token>();
-        Token token = new Token();
-        response.setCode(1);
-        response.setMsg("成功");
-        response.setResult(token);
-
-        return response;
-    }
-
-    @RequestMapping(method = RequestMethod.PUT)
-    @ResponseBody
-    public Object put(@Valid @RequestBody UserParam userParam, @ModelAttribute("req") Req req, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getErrorCount());
-        }
-        System.out.println(userParam);
-
-        Res<Token> response = new Res<Token>();
-        Token token = new Token();
-        response.setCode(1);
-        response.setMsg("成功");
-        response.setResult(token);
-
-        return response;
-    }
-
 }
