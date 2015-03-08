@@ -1,4 +1,4 @@
-package nomouse.spring.web.dto;
+package nomouse.spring.api.dto;
 
 /**
  * Created by nomouse on 2015/1/12.
