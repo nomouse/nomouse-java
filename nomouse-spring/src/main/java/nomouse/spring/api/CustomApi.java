@@ -1,9 +1,9 @@
-package nomouse.spring.web;
+package nomouse.spring.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nomouse.spring.web.dto.Res;
-import nomouse.spring.web.dto.Token;
-import nomouse.spring.web.param.UserParam;
+import nomouse.spring.api.common.Res;
+import nomouse.spring.api.dto.Token;
+import nomouse.spring.api.param.UserParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping()
-public class CustomController {
+public class CustomApi {
 
     @Autowired
     private Validator validator;

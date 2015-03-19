@@ -80,7 +80,7 @@
 
     <beans profile="production">
         <context:property-placeholder
-                ignore-resource-not-found="true" location="classpath*:/application.properties"/>
+                ignore-resource-not-found="true" location="classpath*:/META-INF/config/application.properties"/>
         <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
               destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}"/>
@@ -100,7 +100,7 @@
 
     <beans profile="development">
         <context:property-placeholder
-                ignore-resource-not-found="true" location="classpath*:/application.devlopment.properties"/>
+                ignore-resource-not-found="true" location="classpath*:/META-INF/config/application.devlopment.properties"/>
         <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
               destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}"/>
@@ -120,7 +120,7 @@
 
     <beans profile="local">
         <context:property-placeholder
-                ignore-resource-not-found="true" location="classpath*:/application.local.properties"/>
+                ignore-resource-not-found="true" location="classpath*:/META-INF/config/application.local.properties"/>
         <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
               destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}"/>

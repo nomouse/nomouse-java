@@ -1,6 +1,5 @@
-package nomouse.spring.web;
+package nomouse.spring.api.common;
 
-import nomouse.spring.web.dto.Res;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

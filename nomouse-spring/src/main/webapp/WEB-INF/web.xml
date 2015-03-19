@@ -9,8 +9,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath*:/applicationContext.xml
-            classpath*:/applicationContext-queen.xml
+            classpath*:/META-INF/spring/applicationContext.xml
+            classpath*:/META-INF/spring/applicationContext-nomouse.xml
         </param-value>
     </context-param>
 
@@ -22,7 +22,7 @@
 
     <!--Spring ApplicationContext 载入 -->
     <listener>
-        <listener-class>com.lianxi.queen.context.SpringContextLoaderListener</listener-class>
+        <listener-class>nomouse.spring.context.SpringContextLoaderListener</listener-class>
     </listener>
 
     <!-- Spring MVC Servlet -->

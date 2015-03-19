@@ -1,9 +1,9 @@
-package nomouse.spring.web;
+package nomouse.spring.api;
 
-import nomouse.spring.web.dto.Res;
-import nomouse.spring.web.dto.Token;
-import nomouse.spring.web.param.Req;
-import nomouse.spring.web.param.UserParam;
+import nomouse.spring.api.common.Res;
+import nomouse.spring.api.dto.Token;
+import nomouse.spring.api.common.Req;
+import nomouse.spring.api.param.UserParam;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,7 +16,7 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping()
-public class TokenController extends BaseController {
+public class TokenApi extends BaseApi {
 
     @RequestMapping(value = "/token", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

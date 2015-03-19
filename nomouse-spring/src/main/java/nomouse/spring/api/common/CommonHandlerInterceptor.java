@@ -1,7 +1,6 @@
-package nomouse.spring.web.common;
+package nomouse.spring.api.common;
 
 import nomouse.lang.StringUtils;
-import nomouse.spring.web.param.Req;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
