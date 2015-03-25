@@ -1,3 +1,16 @@
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile("org.springframework:spring-context-support:${springVersion}")
+
+    compile("org.springframework:spring-aop:${springVersion}")
+    compile("org.springframework:spring-tx:${springVersion}")
+    compile("org.springframework:spring-jdbc:${springVersion}")
+    compile("org.springframework:spring-orm:${springVersion}")
+
+    compile("org.springframework.data:spring-data-jpa:${springJpaVersion}")
+    compile("org.hibernate:hibernate-core:${hibernateVersion}")
+    compile("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
+    compile("org.hibernate.javax.persistence:hibernate-jpa-2.0-api:${hibernateJpaVersion}")
+
+    //compile("redis.clients:jedis:${jedisVersion}")
+    //compile("org.springframework.data:spring-data-redis:${springRedisVersion}")
 }

@@ -20,23 +20,22 @@
     <description>Spring Base</description>
 
     <!-- @Required,@Autowired -->
-    <context:component-scan base-package="nomouse.spring">
+    <context:component-scan base-package="nomouse">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <context:exclude-filter type="annotation"
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
     <!-- 以静态变量保存ApplicationContext -->
-    <bean class="nomouse.spring.context.SpringContextAware"
+    <bean class="nomouse.core.context.SpringContextAware"
           lazy-init="false"/>
-
 
     <!--JPA @Entity @Repository Transation
     -->
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="nomouse.spring.entity"/>
+        <property name="packagesToScan" value="nomouse.core.entity,nomouse.spring.entity"/>
         <property name="jpaProperties">
             <props>
                 <prop key="javax.persistence.validation.mode">none</prop>
@@ -49,7 +48,7 @@
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
     </bean>
-    <jpa:repositories base-package="nomouse.spring.repository"
+    <jpa:repositories base-package="nomouse"
                       transaction-manager-ref="transactionManager"
                       entity-manager-factory-ref="entityManagerFactory"/>
 
@@ -100,7 +99,8 @@
 
     <beans profile="development">
         <context:property-placeholder
-                ignore-resource-not-found="true" location="classpath*:/META-INF/config/application.devlopment.properties"/>
+                ignore-resource-not-found="true"
+                location="classpath*:/META-INF/config/application.devlopment.properties"/>
         <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
               destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}"/>

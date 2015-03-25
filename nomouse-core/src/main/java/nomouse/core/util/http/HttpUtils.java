@@ -1,4 +1,4 @@
-package nomouse.http;
+package nomouse.core.util.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -13,7 +13,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import nomouse.json.JacksonUtils;
+import nomouse.core.util.json.JacksonUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

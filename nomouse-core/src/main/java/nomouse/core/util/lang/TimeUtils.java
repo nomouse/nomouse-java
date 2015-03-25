@@ -1,4 +1,4 @@
-package nomouse.lang;
+package nomouse.core.util.lang;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

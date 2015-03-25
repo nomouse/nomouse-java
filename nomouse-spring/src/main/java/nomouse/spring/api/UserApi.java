@@ -1,16 +1,12 @@
 package nomouse.spring.api;
 
-import nomouse.spring.entity.User;
-import nomouse.spring.repository.UserDao;
+import nomouse.core.entity.User;
+import nomouse.core.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequestMapping

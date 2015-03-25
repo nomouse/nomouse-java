@@ -5,7 +5,7 @@
  * @version 1.0
  * Copyright (c) 2013 BMS,Inc. All Rights Reserved.
  */
-package nomouse.spring.context;
+package nomouse.core.context;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

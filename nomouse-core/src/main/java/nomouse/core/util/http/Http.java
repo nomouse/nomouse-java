@@ -1,4 +1,4 @@
-package nomouse.http;
+package nomouse.core.util.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

@@ -1,4 +1,4 @@
-package nomouse.lang;
+package nomouse.core.util.lang;
 
 /**
  * 字符处理帮助类
