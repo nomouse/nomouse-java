@@ -1,0 +1,38 @@
+
+package nomouse.spring.repository;
+
+import nomouse.spring.entity.Record;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:META-INF/applicationContext.xml",
+        "classpath:META-INF/applicationContext-nomouse.xml"})
+@ActiveProfiles("dev")
+public class RecordDaoTest {
+
+    @Autowired
+    RecordDao recordDao;
+
+    @Test
+    public void save() {
+        Record record = new Record();
+        record.setName("wuch");
+        recordDao.save(record);
+    }
+
+    @Test
+    public void find() {
+    }
+
+    @Test
+    public void update() {
+
+    }
+
+
+}
