@@ -1,8 +1,8 @@
 package nomouse.demo.api;
 
+import nomouse.demo.api.common.Req;
 import nomouse.demo.api.common.Res;
 import nomouse.demo.api.dto.Token;
-import nomouse.demo.api.common.Req;
 import nomouse.demo.api.param.UserParam;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -11,11 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-/**
- * Created by nomouse on 2014/12/8.
- */
 @Controller
-@RequestMapping()
+@RequestMapping(value = "/api")
 public class TokenApi extends BaseApi {
 
     @RequestMapping(value = "/token", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -29,9 +26,7 @@ public class TokenApi extends BaseApi {
 
         Res<Token> response = new Res<>();
         Token token = new Token();
-        response.setCode(1);
-        response.setMsg("成功");
-        response.setResult(token);
+        response.code = (1);
 
         return response;
     }

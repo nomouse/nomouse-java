@@ -17,11 +17,8 @@ import javax.validation.Validator;
 import java.io.IOException;
 import java.util.Set;
 
-/**
- * Created by nomouse on 2014/12/8.
- */
 @Controller
-@RequestMapping()
+@RequestMapping(value = "/api")
 public class CustomApi {
 
     @Autowired
@@ -38,13 +35,11 @@ public class CustomApi {
 
         System.out.println(set.size());
 
-        Res<Token> response = new Res<Token>();
+        Res<Token> res = new Res<Token>();
         Token token = new Token();
-        response.setCode(1);
-        response.setMsg("成功");
-        response.setResult(token);
+        res.code = (1);
 
-        return response;
+        return res;
     }
 
 }
