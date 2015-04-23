@@ -41,7 +41,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="nomouse.spring.api.common.CommonHandlerInterceptor"></bean>
+            <bean class="nomouse.demo.api.common.CommonHandlerInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
     -->

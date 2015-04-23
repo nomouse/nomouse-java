@@ -1,4 +1,4 @@
-package nomouse.spring.api.common;
+package nomouse.demo.api.common;
 
 /**
  * 请求通用信息

@@ -1,9 +1,9 @@
-package nomouse.spring.api;
+package nomouse.demo.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nomouse.spring.api.common.Res;
-import nomouse.spring.api.dto.Token;
-import nomouse.spring.api.param.UserParam;
+import nomouse.demo.api.common.Res;
+import nomouse.demo.api.dto.Token;
+import nomouse.demo.api.param.UserParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

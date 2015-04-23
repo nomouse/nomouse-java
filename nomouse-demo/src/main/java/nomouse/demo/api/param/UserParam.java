@@ -1,4 +1,4 @@
-package nomouse.spring.api.param;
+package nomouse.demo.api.param;
 
 /**
  * Created by nomouse on 2015/3/19.

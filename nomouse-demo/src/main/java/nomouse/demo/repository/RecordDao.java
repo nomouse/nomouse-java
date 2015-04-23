@@ -1,6 +1,6 @@
-package nomouse.spring.repository;
+package nomouse.demo.repository;
 
-import nomouse.spring.entity.Record;
+import nomouse.demo.entity.Record;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

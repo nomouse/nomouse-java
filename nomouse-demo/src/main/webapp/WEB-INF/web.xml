@@ -22,7 +22,7 @@
 
     <!--Spring ApplicationContext 载入 -->
     <listener>
-        <listener-class>nomouse.spring.context.SpringContextLoaderListener</listener-class>
+        <listener-class>nomouse.demo.context.SpringContextLoaderListener</listener-class>
     </listener>
 
     <!-- Spring MVC Servlet -->

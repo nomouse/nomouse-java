@@ -1,10 +1,3 @@
-/**
- * Description:
- * SpringContextHolder.java Create on 2013-3-8 上午10:19:20 
- * @author xiaopin
- * @version 1.0
- * Copyright (c) 2013 BMS,Inc. All Rights Reserved.
- */
 package nomouse.core.context;
 
 import org.springframework.context.ApplicationContext;

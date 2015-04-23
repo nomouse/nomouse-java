@@ -1,4 +1,4 @@
-package nomouse.spring.api.common;
+package nomouse.demo.api.common;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

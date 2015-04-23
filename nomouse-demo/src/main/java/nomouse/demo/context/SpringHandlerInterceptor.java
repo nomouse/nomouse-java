@@ -1,4 +1,4 @@
-package nomouse.spring.context;
+package nomouse.demo.context;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 

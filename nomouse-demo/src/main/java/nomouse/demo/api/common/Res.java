@@ -1,4 +1,4 @@
-package nomouse.spring.api.common;
+package nomouse.demo.api.common;
 
 public class Res<T> {
 

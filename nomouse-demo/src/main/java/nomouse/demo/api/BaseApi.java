@@ -1,6 +1,6 @@
-package nomouse.spring.api;
+package nomouse.demo.api;
 
-import nomouse.spring.api.common.Req;
+import nomouse.demo.api.common.Req;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 

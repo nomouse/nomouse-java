@@ -1,6 +1,6 @@
-package nomouse.spring.upload;
+package nomouse.demo.upload;
 
-import nomouse.spring.api.common.Res;
+import nomouse.demo.api.common.Res;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

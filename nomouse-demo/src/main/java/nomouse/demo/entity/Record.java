@@ -1,4 +1,4 @@
-package nomouse.spring.entity;
+package nomouse.demo.entity;
 
 import javax.persistence.*;
 
