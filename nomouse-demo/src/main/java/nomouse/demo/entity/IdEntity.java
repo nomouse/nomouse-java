@@ -15,7 +15,7 @@ public abstract class IdEntity implements Serializable {
     /**
      * 行状态：正常
      */
-    public static final int STATUS_NORMAL = 0;
+    public static final int STATUS_NORMAL = 1;
 
     /**
      * 行状态：标记为删除

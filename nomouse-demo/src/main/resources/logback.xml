@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <jmxConfigurator/>
+
+    <property name="LOG_HOME" value="/logs/nomouse"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 典型的日志pattern -->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 演示按时间滚动的策略 -->
+    <appender name="defaultLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/default.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/${LOG_HOME}/default.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 保留 30天数据，默认无限-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 按文件大小滚动的策略 -->
+    <appender name="schedulerLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/scheduler.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/scheduler.%i.log</fileNamePattern>
+            <!-- 最多保留10个文件，默认是7 -->
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>20MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{HH:mm:ss.SSS} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 综合时间与大小的滚动策略，先按小时滚动，小时内的文件大于10mb时再按大小滚动 -->
+    <appender name="errorLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/error.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/error-%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>20MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{HH:mm:ss.SSS},%msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 按文件大小滚动的策略 -->
+    <appender name="httpLogFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/http.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/http.%i.log</fileNamePattern>
+            <!-- 最多保留10个文件，默认是7 -->
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>20MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%d] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- business log 使用独立的appender，不继承Root的appender -->
+    <logger name="com.lianxi.queen" level="ERROR" additivity="false">
+        <appender-ref ref="errorLogFile"/>
+    </logger>
+
+    <logger name="com.lianxi.queen.scheduler" level="INFO" additivity="false">
+        <appender-ref ref="schedulerLogFile"/>
+    </logger>
+
+    <logger name="com.lianxi.queen.filter.HttpLogFilter" level="DEBUG" additivity="false">
+        <appender-ref ref="httpLogFile"/>
+    </logger>
+
+    <!-- spring -->
+    <logger name="org.springframework" level="ERROR"/>
+
+    <!--hibernate -->
+    <logger name="org.hibernate" level="ERROR"/>
+
+    <!--log4jdbc -->
+    <logger name="jdbc" level="ERROR"/>
+    <logger name="jdbc.sqltiming" level="DEBUG"/>
+
+    <!--swagger -->
+    <logger name="com.mangofactory.swagger" level="ERROR"/>
+
+    <!-- cxf inbound/outbound logger -->
+    <!--<logger name="org.glassfish.jersey" level="INFO" additivity="true"/>-->
+
+    <!-- root -->
+    <root level="DEBUG">
+        <appender-ref ref="console"/>
+        <appender-ref ref="errorLogFile"/>
+    </root>
+
+</configuration>

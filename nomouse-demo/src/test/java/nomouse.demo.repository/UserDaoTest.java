@@ -1,7 +1,7 @@
+package nomouse.demo.repository;
 
-package nomouse.spring.repository;
-
-import nomouse.spring.entity.Record;
+import nomouse.demo.entity.User;
+import nomouse.util.TimeUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +13,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = {"classpath:META-INF/applicationContext.xml",
         "classpath:META-INF/applicationContext-nomouse.xml"})
 @ActiveProfiles("dev")
-public class RecordDaoTest {
+public class UserDaoTest {
 
     @Autowired
-    RecordDao recordDao;
+    UserDao userDao;
 
     @Test
     public void save() {
-        Record record = new Record();
-        record.setName("wuch");
-        recordDao.save(record);
+        User user = new User();
+        user.setUsername("wuch");
+        user.setNickname("武昌");
+        user.setAvatar("http://my.jpg");
+        user.setCreated(TimeUtils.getTimestamp());
+        user.setUpdated(TimeUtils.getTimestamp());
+        userDao.save(user);
     }
 
     @Test
@@ -33,6 +37,4 @@ public class RecordDaoTest {
     public void update() {
 
     }
-
-
 }

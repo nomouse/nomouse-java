@@ -1,4 +1,4 @@
-package nomouse.demo.upload;
+package nomouse.demo.web.upload;
 
 import nomouse.demo.api.common.Res;
 import org.apache.commons.io.FileUtils;

@@ -65,6 +65,11 @@ subprojects {
         jedisVersion = "2.4.1"
         memcachedVersion = "3.0.2"
 
+        shiroVersion = "1.2.3"
+        sitemeshVersion = "2.4.2"
+        ehcacheVersion = "2.6.9"
+        freemarkerVersion = "2.3.20"
+
         tomcatVersion = "7.0.55"
 
         jerseyVersion = "2.11"

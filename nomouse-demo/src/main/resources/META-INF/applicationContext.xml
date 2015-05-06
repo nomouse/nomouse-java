@@ -27,7 +27,7 @@
     </context:component-scan>
 
     <!-- 以静态变量保存ApplicationContext -->
-    <bean class="nomouse.core.context.SpringContextAware"
+    <bean class="nomouse.core.context.SpringContext"
           lazy-init="false"/>
 
     <!--JPA @Entity @Repository Transation
@@ -35,7 +35,7 @@
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="nomouse.core.entity,nomouse.demo.entity"/>
+        <property name="packagesToScan" value="nomouse.demo.entity"/>
         <property name="jpaProperties">
             <props>
                 <prop key="javax.persistence.validation.mode">none</prop>
