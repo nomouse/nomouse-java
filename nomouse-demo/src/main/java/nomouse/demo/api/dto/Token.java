@@ -1,17 +1,10 @@
 package nomouse.demo.api.dto;
 
-/**
- * Created by nomouse on 2015/1/12.
- */
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
+@ApiModel
 public class Token {
-
-    private String token;
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
+    @ApiModelProperty(value = "票据")
+    public String token;
 }

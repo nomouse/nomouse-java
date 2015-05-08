@@ -25,8 +25,8 @@ public class Res<T> {
     public T result;
 
     @ApiModelProperty("业务数据的总数量用于分页")
-    //@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public long resultCount;
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public long totalCount;
 
     /**
      * 默认是成功

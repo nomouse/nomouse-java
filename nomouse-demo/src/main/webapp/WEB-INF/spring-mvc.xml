@@ -38,13 +38,13 @@
     </mvc:annotation-driven>
 
     <!--spring-mvc Interceptor
+    -->
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/**"/>
+            <mvc:mapping path="/v1/**"/>
             <bean class="nomouse.demo.api.common.ApiInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
-    -->
 
     <!--jsr303 validator hibernate impl-->
     <bean id="validator"

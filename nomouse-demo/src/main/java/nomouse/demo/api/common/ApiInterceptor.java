@@ -6,6 +6,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 
 /**
@@ -14,34 +15,24 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class ApiInterceptor extends HandlerInterceptorAdapter {
 
-    public static final String API_IDENTIFY = "Lianxi";
-    public static final String PATH_TOKEN = "/token/get";
-
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         long visitTime = System.currentTimeMillis();
-
         String servletPath = request.getServletPath();
         String method = request.getMethod();
 
-//        String contextPath = request.getContextPath();
-//        String relativePath = request.getRequestURI();
-//        String absolutePath = request.getRequestURL().toString();
+        String sig = request.getParameter("sig");
+        String time = request.getParameter("time");
+        Map<String, String[]> map = request.getParameterMap();
 
-        String userAgent = request.getHeader("x-token");
-        Req req = new Req();
-
-        request.setAttribute("req", req);
+        System.out.println(sig);
 
         return super.preHandle(request, response, handler);
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
-        Req req = (Req) request.getAttribute("req");
         super.postHandle(request, response, handler, modelAndView);
     }
 
