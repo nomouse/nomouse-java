@@ -1,6 +1,7 @@
 package nomouse.util;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,6 +9,8 @@ import java.util.Date;
 
 /**
  * 时间工具类 线程安全
+ *
+ * @author nomouse
  */
 public class TimeUtils {
 
@@ -49,6 +52,7 @@ public class TimeUtils {
         return new Timestamp(System.currentTimeMillis());
     }
 
+
     /**
      * 传入年月日，返回当天0点的毫秒数
      *
@@ -63,7 +67,7 @@ public class TimeUtils {
     }
 
     /**
-     * 传入时间，返回当天0点的毫秒数
+     * 传入时间，返回当天0点0分0秒000的毫秒数
      *
      * @param time
      * @return 时间戳
@@ -76,19 +80,37 @@ public class TimeUtils {
     }
 
     /**
-     * 返回当天0点的毫秒数
+     * 返回当天0点0分0秒000的毫秒数
      *
      * @return 时间戳
      */
     public static long getTimeDayBegin() {
+        return getTimeDayBegin(getTime());
+    }
+
+    /**
+     * 返回当前小时0分0秒000的毫秒数
+     *
+     * @return 时间戳
+     */
+    public static long getTimeHourBegin() {
+        return getTimeHourBegin(getTime());
+    }
+
+    /**
+     * 传入时间，返回当前小时0分0秒000的毫秒数
+     *
+     * @return 时间戳
+     */
+    public static long getTimeHourBegin(long time) {
         Calendar calendar = calendarThreadLocal.get();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        setTime(calendar, 0, 0, 0, 0);
+        calendar.setTimeInMillis(time);
+        setTime(calendar, 0, 0, 0);
         return calendar.getTimeInMillis();
     }
 
     /**
-     * 传入时间，返回第二天0点的毫秒数
+     * 传入时间，返回当天23时59分59秒999毫秒
      *
      * @param time
      * @return
@@ -96,24 +118,43 @@ public class TimeUtils {
     public static long getTimeDayEnd(long time) {
         Calendar calendar = calendarThreadLocal.get();
         calendar.setTimeInMillis(time);
-        setTime(calendar, 0, 0, 0, 0);
-        addDays(calendar, 1);
+        setTime(calendar, 23, 59, 59, 999);
         return calendar.getTimeInMillis();
     }
 
     /**
-     * 返回第二天0点的毫秒数
+     * 返回今天23时59分59秒999毫秒
      *
      * @return 时间戳
      */
     public static long getTimeDayEnd() {
-        Calendar calendar = calendarThreadLocal.get();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        setTime(calendar, 0, 0, 0, 0);
-        addDays(calendar, 1);
-        return calendar.getTimeInMillis();
+        return getTimeDayEnd(getTime());
     }
 
+
+    /**
+     * 传入时间，获取属于当天的第几小时
+     *
+     * @param time 时间
+     * @return 当天第几小时(0-23)
+     */
+    public static int getHourOfDay(long time) {
+        Calendar calendar = calendarThreadLocal.get();
+        calendar.setTimeInMillis(time);
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    /**
+     * 传入时间，获取属于当月的第几天
+     *
+     * @param time 时间
+     * @return 当月第几天(1-31)
+     */
+    public static int getDayOfMonth(long time) {
+        Calendar calendar = calendarThreadLocal.get();
+        calendar.setTimeInMillis(time);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
 
     /**
      * 传入时间和增加的天数，返回计算后的时间
@@ -130,14 +171,17 @@ public class TimeUtils {
     }
 
     /**
-     * 返回差几天
+     * 传入时间和增加的小时数，返回计算后的时间
      *
-     * @param time1 开始时间
-     * @param time2 结束时间
+     * @param time  开始时间
+     * @param hours 增加的小时数，负数代表减
      * @return 时间戳
      */
-    public static int getDayDiff(long time1, long time2) {
-        return (int) ((time2 - time1) / 1000 / DAY_SECONDS);
+    public static long getTimeHourAdded(long time, int hours) {
+        Calendar calendar = calendarThreadLocal.get();
+        calendar.setTimeInMillis(time);
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        return calendar.getTimeInMillis();
     }
 
     private static long setDate(Calendar calendar, int year, int month, int day) {
@@ -154,13 +198,22 @@ public class TimeUtils {
         return calendar.getTimeInMillis();
     }
 
+    private static long setTime(Calendar calendar, int minute, int second, int millisecond) {
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        calendar.set(Calendar.MILLISECOND, millisecond);
+        return calendar.getTimeInMillis();
+    }
+
     private static void addDays(Calendar calendar, int days) {
         calendar.add(Calendar.DAY_OF_YEAR, days);
     }
 
 
     public static void main(String[] args) {
-        // Date now = new Date();
+        Date now = new Date();
+//        System.out.println(TIME_UTC.format(now));
+        System.out.println(new Date(1439947009940L));
         // long nowTime = now.getTime();
         //
         // System.out.println("当前时间：" + DATETIME_TO_MINUTE.format(now));
@@ -176,7 +229,7 @@ public class TimeUtils {
         // System.out.println("一周前此时："
         // + getTimeForNewsFeed(nowTime - DAY_SECONDS * 7 * 1000));
 
-        System.out.println(getRemainHours(60));
+
     }
 
     /**
@@ -498,19 +551,25 @@ public class TimeUtils {
      * 日期格式到秒-（2010/9/9 9:9:9）
      */
     public static final SimpleDateFormat DATETIME_TO_SECOND = new SimpleDateFormat(
-            "yyyy/M/d H:m:s");
+            "yyyy-M-d H:m:s");
 
     /**
      * 日期格式到秒-（2010/9/9 09:09:09）
      */
     public static final SimpleDateFormat DATETIME_TO_SECOND2 = new SimpleDateFormat(
-            "yyyy/M/d HH:mm:ss");
+            "yyyy-MM-dd HH:mm:ss");
 
     /**
      * 日期格式到分-（2010/09/09 09:09）
      */
     public static final SimpleDateFormat DATETIME_TO_MINUTE = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm");
+
+    /**
+     * 日期格式到秒-（2010-09-09 09:09:09）
+     */
+    public static final SimpleDateFormat DATETIME_TO_SECOND3 = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss");
 
     /**
      * 日期格式月日-（9月9日）
@@ -536,50 +595,57 @@ public class TimeUtils {
     public static final SimpleDateFormat TIME_TO_MINITE = new SimpleDateFormat(
             "h:mm");
 
+    /**
+     * 时间格式UTC(世界统一时间2005-10-01T）
+     */
+    public static final SimpleDateFormat TIME_UTC = new SimpleDateFormat(
+            "yyyy-MM-dd'T'HH:mm:ss'Z'");
+
     // 60秒
-    private final static int MINUTE_SECONDS = 60;
+    public final static int MINUTE_SECONDS = 60;
     // 60分钟
-    private final static int HOUR_SECONDS = 3600;
+    public final static int HOUR_SECONDS = 3600;
     // 24小时
-    private final static int DAY_SECONDS = 86400;
+    public final static int DAY_SECONDS = 86400;
     // 2天
-    private final static int TWO_DAY_SECONDS = 86400 * 2;
+    public final static int TWO_DAY_SECONDS = 86400 * 2;
     // 3天
-    private final static int THREE_DAY_SECONDS = 86400 * 3;
-
+    public final static int THREE_DAY_SECONDS = 86400 * 3;
     // 一周
-    // private final static int WEEK_SECONDS = 86400 * 7;
+    public final static int WEEK_SECONDS = 86400 * 7;
+
+    // 今天
+    public final static String TODAY = "今天";
 
     // 昨天
-    private final static String ONE_DAY_BEFORE = "昨天";
+    public final static String ONE_DAY_BEFORE = "昨天";
 
     // 昨天
-    private final static String TWO_DAY_BEFORE = "前天";
+    public final static String TWO_DAY_BEFORE = "前天";
 
     // 凌晨
-    private final static String DAWN = "凌晨";
+    public final static String DAWN = "凌晨";
 
     // 晚上
-    private final static String NIGHT = "晚上";
+    public final static String NIGHT = "晚上";
 
     // 早上
-    private final static String AM = "早上";
+    public final static String AM = "早上";
 
     // 下午
-    private final static String PM = "下午";
+    public final static String PM = "下午";
 
     // 未知时间
-    private final static String UNKNOWN = "";
+    public final static String UNKNOWN = "";
 
     // 星期几
-    private final static String[] WEEKDAYS = {"星期日", "星期一", "星期二", "星期三",
+    public final static String[] WEEKDAYS = {"星期日", "星期一", "星期二", "星期三",
             "星期四", "星期五", "星期六"};
-
 
     /**
      * 获取两个时间的天数间隔，每个时间都舍去时分秒
      */
-    public static int getDiffDay(Timestamp timestamp1, Timestamp timestamp2) {
+    public static int getDiffDays(Timestamp timestamp1, Timestamp timestamp2) {
         Calendar c1 = Calendar.getInstance();
         c1.setTimeInMillis(timestamp1.getTime());
         c1.set(Calendar.HOUR, 0);
@@ -594,13 +660,20 @@ public class TimeUtils {
         c2.set(Calendar.SECOND, 0);
         c2.set(Calendar.MILLISECOND, 0);
 
-        long days = 0;
+        long diff;
         if (c1.before(c2)) {
-            days = (c2.getTimeInMillis() - c1.getTimeInMillis()) / (24 * 60 * 60 * 1000);
+            diff = (c2.getTimeInMillis() - c1.getTimeInMillis()) / (24 * 60 * 60 * 1000);
         } else {
-            days = (c1.getTimeInMillis() - c2.getTimeInMillis()) / (24 * 60 * 60 * 1000);
+            diff = (c1.getTimeInMillis() - c2.getTimeInMillis()) / (24 * 60 * 60 * 1000);
         }
-        return (int) days;
+        return (int) diff;
+    }
+
+    /**
+     * 获取两个时间的秒数间隔
+     */
+    public static int getDiffSeconds(long t1, long t2) {
+        return (int) Math.abs(t1 - t2) / (1000);
     }
 
     /**
@@ -616,5 +689,22 @@ public class TimeUtils {
 
 
         return new Timestamp(c1.getTimeInMillis());
+    }
+
+    public static String getCurrentDateStr() {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(new Date());
+    }
+
+    public static String getCurrentDateStr(String formatPattern) {
+        if (formatPattern == null) {
+            return getCurrentDateStr();
+        }
+        DateFormat format = new SimpleDateFormat(formatPattern);
+        return format.format(new Date());
+    }
+
+    public static Timestamp getTimestamp(SimpleDateFormat format, String time) {
+        return new Timestamp(parseDate(format, time).getTime());
     }
 }

@@ -1,2 +1,3 @@
-include ':nomouse-core'
+include ':nomouse-util'
+include ':nomouse-web'
 include ':nomouse-demo'

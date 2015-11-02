@@ -17,6 +17,8 @@ import java.util.Map;
 
 /**
  * jackson工具类，配合jackson2.0+使用
+ *
+ * @author nomouse
  */
 public class JacksonUtils {
 
@@ -25,6 +27,7 @@ public class JacksonUtils {
     public static String EMPTY_JSON_OBJECT = "{}";
 
     public static String EMPTY_JSON_ARRAY = "[]";
+
 
     private static ObjectMapper mapper;
 
@@ -46,6 +49,9 @@ public class JacksonUtils {
 
         // 定义针对日期类型的反序列化时的数据格式
 
+    }
+
+    private JacksonUtils() {
     }
 
     /**
@@ -84,14 +90,14 @@ public class JacksonUtils {
     public static <T> T fromJson(String source, TypeReference<T> type) {
         T result = null;
         if (source == null || "".equals(source)) {
+            //return
+        } else {
+            try {
+                result = mapper.readValue(source, type);
+            } catch (Exception e) {
+                logger.error("Json Error", "Json读取失败" + e);
+            }
         }
-
-        try {
-            result = mapper.readValue(source, type);
-        } catch (Exception e) {
-            logger.error("Json Error", "Json读取失败" + e);
-        }
-
         return result;
     }
 
@@ -106,16 +112,17 @@ public class JacksonUtils {
     public static <T> T fromJson(String source, Class<T> cls) {
         T result = null;
         if (source == null || "".equals(source)) {
-        }
-        try {
-            result = mapper.readValue(source, cls);
-        } catch (Exception e) {
-            logger.error("Json Error", "Json读取失败" + e);
+            //return
+        } else {
+            try {
+                result = mapper.readValue(source, cls);
+            } catch (Exception e) {
+                logger.error("Json Error", "Json读取失败" + e);
+            }
         }
 
         return result;
     }
-
 
     /**
      * 反序列化复杂Collection如List<Bean>,

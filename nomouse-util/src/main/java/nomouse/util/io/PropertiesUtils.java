@@ -1,9 +1,9 @@
-package nomouse.core.context;
+package nomouse.util.io;
 
 /**
- * Spring profile 常用方法与profile名称。
+ *
  */
-public class SpringProfiles {
+public class PropertiesUtils {
 
     public static final String ACTIVE_PROFILE = "spring.profiles.active";
     public static final String DEFAULT_PROFILE = "spring.profiles.default";
@@ -21,5 +21,4 @@ public class SpringProfiles {
     public static final boolean isPro() {
         return DEV.equals(System.getProperty(ACTIVE_PROFILE));
     }
-
 }

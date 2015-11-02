@@ -4,11 +4,13 @@ import java.util.*;
 
 /**
  * 集合操作辅助
+ *
+ * @author nomouse
  */
 public class CollectionUtils {
 
     /**
-     * 提取集合中的对象的两个属性(通过Getter函数), 组合成Map.
+     * 提取集合中的对象的两个属性, 组合成Map.
      *
      * @param collection        来源集合.
      * @param keyPropertyName   要提取为Map中的Key值的属性名.
@@ -31,7 +33,7 @@ public class CollectionUtils {
     }
 
     /**
-     * 提取集合中的对象的一个属性(通过Getter函数), 组合成List.
+     * 提取集合中的对象的一个属性, 组合成List.
      *
      * @param collection   来源集合.
      * @param propertyName 要提取的属性名.
@@ -51,7 +53,7 @@ public class CollectionUtils {
     }
 
     /**
-     * 提取集合中的对象的一个属性(通过Getter函数), 组合成Set.
+     * 提取集合中的对象的一个属性, 组合成Set.
      *
      * @param collection   来源集合.
      * @param propertyName 要提取的属性名.
@@ -71,7 +73,7 @@ public class CollectionUtils {
     }
 
     /**
-     * 提取集合中的对象的一个属性(通过Getter函数), 组合成由分割符分隔的字符串.
+     * 提取集合中的对象的一个属性,组合成由分割符分隔的字符串.
      *
      * @param collection   来源集合.
      * @param propertyName 要提取的属性名.
@@ -102,10 +104,31 @@ public class CollectionUtils {
     }
 
     /**
+     * 从一个列表中随机取出n个不重复的元素返回
+     */
+    public static List randomFromList(final List list, final int size) {
+
+        if (isEmpty(list)) {
+            return new ArrayList();
+        }
+
+        int poolSize = list.size();
+        int resultSize = Math.min(poolSize, size);
+        List result = new ArrayList(resultSize);
+
+        Set<Integer> resultIndexSet = NumberUtils.randomSet(poolSize, resultSize);
+        for (Integer index : resultIndexSet) {
+            result.add(list.get(index));
+        }
+
+        return result;
+    }
+
+    /**
      * 判断是否为空.
      */
     public static boolean isEmpty(Collection collection) {
-        return (collection == null) || collection.isEmpty();
+        return (collection == null || collection.isEmpty());
     }
 
     /**
@@ -119,7 +142,7 @@ public class CollectionUtils {
      * 判断是否为空.
      */
     public static boolean isNotEmpty(Collection collection) {
-        return (collection != null) && !(collection.isEmpty());
+        return !isEmpty(collection);
     }
 
     /**

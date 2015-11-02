@@ -1,22 +1,6 @@
 package nomouse.util.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import nomouse.util.json.JacksonUtils;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,6 +9,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -32,14 +19,30 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
+import javax.net.ssl.SSLContext;
+import java.io.*;
+import java.net.*;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 简单封装HttpClient
+ *
+ * @author nomouse
  */
 public class HttpUtils {
 
@@ -67,13 +70,221 @@ public class HttpUtils {
      */
     private static final String CONTENT_CHARSET = "UTF-8";
 
+
+    /**
+     * @param url  服务器地址
+     * @param in   文件流
+     * @param name 服务端获取的文件命名
+     * @return
+     */
+    public static String uploadMultipart(String url, InputStream in, String name, String filename) {
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPost httppost = new HttpPost(url);
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create().setMode(
+                HttpMultipartMode.BROWSER_COMPATIBLE);
+
+        HttpResponse response = null;
+        try {
+            multipartEntityBuilder.addBinaryBody(name, in, ContentType.MULTIPART_FORM_DATA, filename);
+            HttpEntity httpEntity = multipartEntityBuilder.build();
+            httppost.setEntity(httpEntity);
+            response = client.execute(httppost);
+            HttpEntity resEntity = response.getEntity();
+            return IOUtils.toString(resEntity.getContent());
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                httppost.abort();
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static String uploadMultipart(String url, File file, String name) {
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPost httppost = new HttpPost(url);
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create().setMode(
+                HttpMultipartMode.BROWSER_COMPATIBLE);
+        HttpResponse response = null;
+        try {
+            multipartEntityBuilder.addBinaryBody(name, file);
+            HttpEntity httpEntity = multipartEntityBuilder.build();
+            httppost.setEntity(httpEntity);
+            response = client.execute(httppost);
+            HttpEntity resEntity = response.getEntity();
+            return IOUtils.toString(resEntity.getContent());
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static String uploadMultipart(String url, Object param, File file, String fileName, String paramName) {
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPost httppost = new HttpPost(url);
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create().setMode(
+                HttpMultipartMode.BROWSER_COMPATIBLE);
+        HttpResponse response = null;
+        try {
+
+            multipartEntityBuilder.addBinaryBody(fileName, file);
+            multipartEntityBuilder.addTextBody(paramName, JacksonUtils.toJson(param),
+                    ContentType.APPLICATION_JSON);
+            HttpEntity httpEntity = multipartEntityBuilder.build();
+            httppost.setEntity(httpEntity);
+            response = client.execute(httppost);
+            HttpEntity resEntity = response.getEntity();
+            return IOUtils.toString(resEntity.getContent());
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static String uploadMultipart(String url, Object param, Map<String, File> fileMap, String paramName) {
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPost httppost = new HttpPost(url);
+
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create().setMode(
+                HttpMultipartMode.BROWSER_COMPATIBLE);
+        HttpResponse response = null;
+        try {
+            for (Map.Entry<String, File> entry : fileMap.entrySet()) {
+                multipartEntityBuilder.addBinaryBody(entry.getKey(), entry.getValue());
+            }
+            multipartEntityBuilder.addTextBody(paramName, JacksonUtils.toJson(param),
+                    ContentType.APPLICATION_JSON);
+            HttpEntity httpEntity = multipartEntityBuilder.build();
+            httppost.setEntity(httpEntity);
+            response = client.execute(httppost);
+            HttpEntity resEntity = response.getEntity();
+            return IOUtils.toString(resEntity.getContent());
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static String post(String url, List<NameValuePair> parameters, String charset) {
+
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPost httppost = new HttpPost(url);
+        HttpResponse response;
+        try {
+            UrlEncodedFormEntity reqEntity = new UrlEncodedFormEntity(parameters, charset);
+            httppost.setEntity(reqEntity);
+            response = client.execute(httppost);
+            HttpEntity resEntity = response.getEntity();
+            return IOUtils.toString(resEntity.getContent(), charset);
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+
+    public static String post(String url, List<NameValuePair> parameters) {
+        return post(url, parameters, "UTF-8");
+    }
+
+    public static InputStream downloadFiles(String url) {
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet httpget = new HttpGet(url);
+        try {
+            HttpResponse response = client.execute(httpget);
+            HttpEntity resEntity = response.getEntity();
+            return IOUtils.toBufferedInputStream(resEntity.getContent());
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static String get(String url) {
+        return get(url, "utf-8");
+    }
+
+    public static String get(String url, String charset) {
+
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet httpget = new HttpGet(url);
+        HttpResponse response = null;
+        try {
+
+            response = client.execute(httpget);
+            HttpEntity resEntity = response.getEntity();
+            return IOUtils.toString(resEntity.getContent());
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
     /**
      * 发送post请求
      *
      * @param url
      * @param params
      * @return
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public static String postHttpRequest2(String url,
                                           HashMap<String, Object> params) throws HttpException {
@@ -147,7 +358,7 @@ public class HttpUtils {
      * @param url
      * @param params
      * @return
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public static String postHttpRequestJson2(String url, byte[] params)
             throws HttpException {
@@ -222,7 +433,7 @@ public class HttpUtils {
      * @param url
      * @param params
      * @return
-     * @throws IOException
+     * @throws java.io.IOException
      */
     @SuppressWarnings({"resource"})
     public static String postHttpRequest(String url,
@@ -287,7 +498,7 @@ public class HttpUtils {
      * @param url
      * @param params
      * @return
-     * @throws HttpException
+     * @throws com.lianxi.core.util.http.HttpUtils.HttpException
      */
     public static String postHttpRequestJson2(String url,
                                               HashMap<String, Object> params) throws HttpException {
@@ -360,6 +571,34 @@ public class HttpUtils {
 
         return responseBody;
 
+    }
+
+    public static void postHttps() {
+        try {
+            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                //信任所有
+                public boolean isTrusted(X509Certificate[] chain,
+                                         String authType) throws CertificateException {
+                    return true;
+                }
+            }).build();
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
+
+            CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+            HttpGet get = new HttpGet();
+            get.setURI(new URI("https://test.com"));
+            httpClient.execute(get);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings({"resource"})
@@ -541,7 +780,7 @@ public class HttpUtils {
      *
      * @param params
      * @return
-     * @throws UnsupportedEncodingException
+     * @throws java.io.UnsupportedEncodingException
      */
     private static String getParams(HashMap<String, Object> params)
             throws UnsupportedEncodingException {
@@ -582,214 +821,6 @@ public class HttpUtils {
                 .replace("*", "%2A");
 
     }
-
-    /**
-     * @param url  服务器地址
-     * @param in   文件流
-     * @param name 服务端获取的文件命名
-     * @return
-     */
-    public static String uploadMultipart(String url, InputStream in, String name, String filename) {
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPost httppost = new HttpPost(url);
-        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create().setMode(
-                HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        HttpResponse response = null;
-        try {
-            multipartEntityBuilder.addBinaryBody(name, in, ContentType.MULTIPART_FORM_DATA, filename);
-            HttpEntity httpEntity = multipartEntityBuilder.build();
-            httppost.setEntity(httpEntity);
-            response = client.execute(httppost);
-            HttpEntity resEntity = response.getEntity();
-            return IOUtils.toString(resEntity.getContent());
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                httppost.abort();
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static String uploadMultipart(String url, File file, String name) {
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPost httppost = new HttpPost(url);
-        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create().setMode(
-                HttpMultipartMode.BROWSER_COMPATIBLE);
-        HttpResponse response = null;
-        try {
-            multipartEntityBuilder.addBinaryBody(name, file);
-            HttpEntity httpEntity = multipartEntityBuilder.build();
-            httppost.setEntity(httpEntity);
-            response = client.execute(httppost);
-            HttpEntity resEntity = response.getEntity();
-            return IOUtils.toString(resEntity.getContent());
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static String uploadMultipart(String url, Object param, File file, String fileName, String paramName) {
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPost httppost = new HttpPost(url);
-        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create().setMode(
-                HttpMultipartMode.BROWSER_COMPATIBLE);
-        HttpResponse response = null;
-        try {
-
-            multipartEntityBuilder.addBinaryBody(fileName, file);
-            multipartEntityBuilder.addTextBody(paramName, JacksonUtils.toJson(param),
-                    ContentType.APPLICATION_JSON);
-            HttpEntity httpEntity = multipartEntityBuilder.build();
-            httppost.setEntity(httpEntity);
-            response = client.execute(httppost);
-            HttpEntity resEntity = response.getEntity();
-            return IOUtils.toString(resEntity.getContent());
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static String uploadMultipart(String url, Object param, Map<String, File> fileMap, String paramName) {
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPost httppost = new HttpPost(url);
-
-        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create().setMode(
-                HttpMultipartMode.BROWSER_COMPATIBLE);
-        HttpResponse response = null;
-        try {
-            for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-                multipartEntityBuilder.addBinaryBody(entry.getKey(), entry.getValue());
-            }
-            multipartEntityBuilder.addTextBody(paramName, JacksonUtils.toJson(param),
-                    ContentType.APPLICATION_JSON);
-            HttpEntity httpEntity = multipartEntityBuilder.build();
-            httppost.setEntity(httpEntity);
-            response = client.execute(httppost);
-            HttpEntity resEntity = response.getEntity();
-            return IOUtils.toString(resEntity.getContent());
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static String post(String url, List<NameValuePair> parameters, String charset) {
-
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPost httppost = new HttpPost(url);
-        HttpResponse response = null;
-        try {
-
-            httppost.setEntity(new UrlEncodedFormEntity(parameters, charset));
-            response = client.execute(httppost);
-            HttpEntity resEntity = response.getEntity();
-            return IOUtils.toString(resEntity.getContent(), charset);
-
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
-
-    public static String post(String url, List<NameValuePair> parameters) {
-        return post(url, parameters, "UTF-8");
-    }
-
-    public static InputStream downloadFiles(String url) {
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpGet httpget = new HttpGet(url);
-        try {
-            HttpResponse response = client.execute(httpget);
-            HttpEntity resEntity = response.getEntity();
-            return IOUtils.toBufferedInputStream(resEntity.getContent());
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static String get(String url) {
-        return get(url, "utf-8");
-    }
-
-    public static String get(String url, String charset) {
-
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpGet httpget = new HttpGet(url);
-        HttpResponse response = null;
-        try {
-
-            response = client.execute(httpget);
-            HttpEntity resEntity = response.getEntity();
-            return IOUtils.toString(resEntity.getContent());
-
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
 
     public static class HttpException extends RuntimeException {
         // 序列化UID

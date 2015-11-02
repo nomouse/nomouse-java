@@ -1,7 +1,5 @@
 package nomouse.util;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.util.Iterator;
 
 /**
@@ -10,6 +8,8 @@ import java.util.Iterator;
  * @author nomouse
  */
 public class StringUtils {
+
+    public static final String UTF8 = "UTF-8";
 
     public static final String SPACE = " ";
 
@@ -125,7 +125,6 @@ public class StringUtils {
      * <p>
      * 判断两个string是否值相等
      * </p>
-     * StringUtils.equals(null, null)    = true
      */
     public static boolean equals(String a, String b) {
         if (a == b)
@@ -415,9 +414,7 @@ public class StringUtils {
         }
         final Object first = iterator.next();
         if (!iterator.hasNext()) {
-            @SuppressWarnings("deprecation") // ObjectUtils.toString(Object) has been deprecated in 3.2
-            final String result = ObjectUtils.toString(first);
-            return result;
+            return first.toString();
         }
 
         // two or more elements
