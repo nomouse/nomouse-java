@@ -15,15 +15,11 @@ argfile*
 activemq-data/
 
 /build
-buildSrc/build
-/nomouse-*/build
-nomouse-test/test-output/
 /src/asciidoc/build
 target/
 ivy-cache
 
 #Ant
-build.xml
 
 #Maven
 target

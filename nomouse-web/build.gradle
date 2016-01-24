@@ -1,0 +1,43 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+dependencies {
+    compile project(':nomouse-biz')
+
+    compile("org.springframework:spring-webmvc:${springVersion}")
+
+    compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
+
+    compile("com.wordnik:swagger-annotations:1.3.11")
+    compile("com.mangofactory:swagger-springmvc:1.0.2")
+
+    providedCompile("org.eclipse.jetty.aggregate:jetty-webapp:${jettyVersion}")
+    providedCompile("org.eclipse.jetty:jetty-jsp:${jettyVersion}")
+
+    providedCompile("javax.servlet:javax.servlet-api:3.0.1")
+    providedCompile("javax.servlet.jsp:jsp-api:2.2")
+
+    providedRuntime("org.eclipse.jetty.aggregate:jetty-webapp:${jettyVersion}")
+    providedRuntime("org.eclipse.jetty:jetty-jsp:${jettyVersion}")
+
+    testCompile("org.springframework:spring-test:${springVersion}")
+    testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+    testCompile("org.mockito:mockito-core:${mockitoVersion}")
+
+}
+
+
+javadoc {
+    options.charSet = 'UTF-8'
+//    options.overview = "src/main/webapp/styles/overview.html"
+//    options.stylesheetFile = file("src/main/webapp/styles/stylesheet.css")
+    source = sourceSets.main.java
+    includes = ["**/api/**"]
+}
+
+jettyRun {
+    httpPort = 8080
+    stopPort = 8089
+    reload = "automatic"
+    scanIntervalSeconds = 1
+} 

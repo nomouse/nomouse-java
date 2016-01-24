@@ -1,0 +1,65 @@
+dependencies {
+    compile project(':nomouse-util')
+
+    //SPRING basic/email/scheduler/freemarker
+    compile("org.springframework:spring-context-support:${springVersion}")
+
+    compile("org.aspectj:aspectjrt:${aspectjVersion}")
+    compile("org.aspectj:aspectjweaver:${aspectjVersion}")
+
+    compile("org.springframework:spring-aop:${springVersion}")
+    compile("org.springframework:spring-tx:${springVersion}")
+    compile("org.springframework:spring-jdbc:${springVersion}")
+    compile("org.springframework:spring-orm:${springVersion}")
+
+    compile("mysql:mysql-connector-java:${mysqlJdbcVersion}")
+    compile("org.apache.tomcat:tomcat-jdbc:${tomcatVersion}")
+    compile("com.googlecode.log4jdbc:log4jdbc:${log4jdbcVersion}")
+
+    compile("org.springframework.data:spring-data-jpa:${springJpaVersion}")
+    compile("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
+//    compile("org.hibernate:hibernate-jpamodelgen:1.2.0.Final")
+
+    compile("org.mybatis:mybatis-spring:${springMybatisVersion}")
+    compile("org.mybatis:mybatis:${mybatisVersion}")
+
+    //compile("net.sf.ehcache:ehcache-core:${ehcacheVersion}")
+    //compile("org.mybatis:mybatis-ehcache:${ehcacheMybatisVersion}")
+
+    //compile("org.apache.solr:solr-solrj:${solrjVersion}")
+    //compile("org.springframework.data:spring-data-solr:${springSolrVersion}")
+
+    compile("redis.clients:jedis:${jedisVersion}")
+    compile("org.springframework.data:spring-data-redis:${springRedisVersion}")
+
+    compile("org.quartz-scheduler:quartz:${quartzVersion}")
+
+    //compile("net.sourceforge.jexcelapi:jxl:${jxlVersion}")
+    //compile("org.apache.poi:poi-ooxml:${poiVersion}")
+
+    //compile("com.dyuproject.protostuff:protostuff-core:${protostuffVersion}")
+    //compile("com.dyuproject.protostuff:protostuff-runtime:${protostuffVersion}")
+
+    //compile("com.whalin:Memcached-Java-Client:${memcachedVersion}")
+
+//    compile("org.apache.activemq:activemq-core:${activemqVersion}") {
+//        exclude group: "org.apache.activemq.protobuf", module: "activemq-protobuf"
+//        exclude group: "org.springframework.osgi", module: "a:spring-osgi-core"
+//        exclude group: "org.osgi", module: ":org.osgi.core"
+//        exclude group: "org.fusesource.mqtt-client", module: ":mqtt-client"
+//        exclude group: "commons-logging", module: ":commons-logging"
+//    }
+//    compile("org.springframework:spring-queue:${springVersion}")
+
+    //compile("org.springframework.integration:spring-integration-core:4.1.6.RELEASE")
+    //compile("org.springframework.integration:spring-integration-kafka:1.1.2.RELEASE")
+    //compile("org.apache.kafka:kafka_2.11:${kafkaVersion}")
+    //compile("org.apache.kafka:kafka-clients:${kafkaVersion}")
+
+    //compile("org.mongodb:mongo-java-driver:${mongodbVersion}")
+    //compile("org.springframework.data:spring-data-mongodb:${springMongodbVersion}") {
+    //    transitive = false
+    //}
+
+    //compile "commons-fileupload:commons-fileupload:1.3.1"
+}
