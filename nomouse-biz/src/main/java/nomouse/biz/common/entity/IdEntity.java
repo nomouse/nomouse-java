@@ -1,4 +1,4 @@
-package nomouse.java.biz.common.entity;
+package nomouse.biz.common.entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

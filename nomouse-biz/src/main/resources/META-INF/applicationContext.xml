@@ -6,6 +6,7 @@
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
   http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/context
@@ -15,27 +16,24 @@
   http://www.springframework.org/schema/aop
   http://www.springframework.org/schema/aop/spring-aop.xsd
   http://www.springframework.org/schema/data/jpa
-  http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+  http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+  http://www.springframework.org/schema/jdbc
+  http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+  ">
 
     <description>Spring Base</description>
 
     <!-- @Required,@Autowired -->
-    <context:component-scan base-package="nomouse">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-        <context:exclude-filter type="annotation"
-                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    <context:component-scan base-package="nomouse.biz">
     </context:component-scan>
 
-    <!-- 以静态变量保存ApplicationContext -->
-    <bean class="nomouse.core.context.SpringContext"
-          lazy-init="false"/>
-
-    <!--JPA @Entity @Repository Transation
-    -->
-    <bean id="entityManagerFactory"
+    <!-- ======================================================================== -->
+    <!--  JPA DataSource                                                          -->
+    <!-- ======================================================================== -->
+    <bean id="jpaEntityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="nomouse.java.biz.account.entity"/>
+        <property name="packagesToScan" value="nomouse.biz.*.entity"/>
         <property name="jpaProperties">
             <props>
                 <prop key="javax.persistence.validation.mode">none</prop>
@@ -48,38 +46,71 @@
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
     </bean>
-    <jpa:repositories base-package="nomouse"
-                      transaction-manager-ref="transactionManager"
-                      entity-manager-factory-ref="entityManagerFactory"/>
-
-    <!-- Jpa Transation
-    -->
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    <bean id="jpaTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="jpaEntityManagerFactory"/>
     </bean>
+    <jpa:repositories base-package="nomouse.biz.*.repository"
+                      transaction-manager-ref="jpaTransactionManager"
+                      entity-manager-factory-ref="jpaEntityManagerFactory"/>
+    <tx:annotation-driven transaction-manager="jpaTransactionManager"
+                          proxy-target-class="true"/>
+    <!-- ======================================================================== -->
+    <!--  Spring Template                                                         -->
+    <!-- ======================================================================== -->
+
     <!-- normal Transation
+     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
        <property name="dataSource" ref="dataSource"/>
     </bean>
     -->
 
-    <!--spring jdbcTemplate
-    -->
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource"></property>
+    <!-- ======================================================================== -->
+    <!--  Mybatis                                                                 -->
+    <!-- ======================================================================== -->
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
+        <property name="typeAliasesPackage" value="com.lianxi.queen.entity"/>
+        <!-- 显式指定Mapper文件位置 -->
+        <property name="mapperLocations" value="classpath:META-INF/mybatis/*Mapper.xml"/>
+        <!-- mybatis全局配置-->
+        <property name="configLocation" value="classpath:META-INF/mybatis/sqlmap-config.xml"/>
+        <!--<property name="configurationProperties">-->
+        <!--<props>-->
+        <!--<prop key="mapUnderscoreToCamelCase">true</prop>-->
+        <!--<prop key="useGeneratedKeys">true</prop>-->
+        <!--</props>-->
+        <!--</property>-->
+        <!-- mybatis插件-->
+        <property name="plugins">
+            <array>
+                <bean class="nomouse.biz.common.mybatis.MybatisHelper"></bean>
+            </array>
+        </property>
+    </bean>
+    <!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="nomouse.biz.*.repository"/>
+        <property name="annotationClass" value="nomouse.biz.common.mybatis.MyBatisRepository"/>
     </bean>
 
-    <!--@Transation aspectj
-    -->
-    <tx:annotation-driven transaction-manager="transactionManager"
-                          proxy-target-class="true"/>
-
+    <!-- ======================================================================== -->
+    <!--  aop注入                                                                  -->
+    <!-- ======================================================================== -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
 
+    <!-- ======================================================================== -->
+    <!--  spring profile根据不同的部署环境设置读取不同的配置                           -->
+    <!-- ======================================================================== -->
     <beans profile="pro">
         <context:property-placeholder
-                ignore-resource-not-found="true" location="classpath*:/META-INF/application.properties"/>
+                ignore-resource-not-found="true" location="classpath*:/META-INF/config/application.properties"/>
         <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
               destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}"/>
@@ -100,27 +131,16 @@
     <beans profile="dev">
         <context:property-placeholder
                 ignore-resource-not-found="true"
-                location="classpath*:/META-INF/application.dev.properties"/>
-        <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
-              destroy-method="close">
-            <property name="driverClassName" value="${jdbc.driver}"/>
-            <property name="url" value="${jdbc.url}"/>
-            <property name="username" value="${jdbc.username}"/>
-            <property name="password" value="${jdbc.password}"/>
-            <property name="maxActive" value="${jdbc.pool.maxActive}"/>
-            <property name="maxIdle" value="${jdbc.pool.maxIdle}"/>
-            <property name="defaultAutoCommit" value="${jdbc.defaultAutoCommit}"/>
-            <property name="validationQuery" value="${jdbc.validationQuery}"/>
-            <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
-            <property name="validationInterval" value="${jdbc.validationInterval}"/>
-            <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
-            <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
-        </bean>
+                location="classpath*:/META-INF/config/application.dev.properties"/>
+        <jdbc:embedded-database id="dataSource" type="HSQL">
+            <jdbc:script location="classpath*:META-INF/sql/hsqldb-init-data.sql"/>
+            <jdbc:script location="classpath*:META-INF/sql/hsqldb-schema.sql"/>
+        </jdbc:embedded-database>
     </beans>
 
     <beans profile="local">
         <context:property-placeholder
-                ignore-resource-not-found="true" location="classpath*:/META-INF/application.local.properties"/>
+                ignore-resource-not-found="true" location="classpath*:/META-INF/config/application.local.properties"/>
         <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
               destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}"/>
@@ -137,6 +157,5 @@
             <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
         </bean>
     </beans>
-
 
 </beans>

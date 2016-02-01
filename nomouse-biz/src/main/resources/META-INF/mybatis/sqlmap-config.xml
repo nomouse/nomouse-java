@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 是否启用,数据中a_column自动映射到java类中驼峰命名的属性,默认false -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 是否使用JDBC主键生成,默认false-->
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+</configuration>

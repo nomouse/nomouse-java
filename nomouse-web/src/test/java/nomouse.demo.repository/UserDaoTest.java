@@ -1,6 +1,7 @@
 package nomouse.java.biz.account.repository;
 
-import nomouse.java.biz.account.entity.User;
+import nomouse.biz.account.entity.User;
+import nomouse.biz.account.repository.UserDao;
 import nomouse.util.TimeUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-nomouse.xml"})
+        "classpath:META-INF/applicationContext-ext.xml"})
 @ActiveProfiles("dev")
 public class UserDaoTest {
 

@@ -1,6 +1,6 @@
-package nomouse.java.biz.account.entity;
+package nomouse.biz.account.entity;
 
-import nomouse.java.biz.common.entity.IdEntity;
+import nomouse.biz.common.entity.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

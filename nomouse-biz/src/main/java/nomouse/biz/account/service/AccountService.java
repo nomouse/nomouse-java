@@ -1,7 +1,7 @@
-package nomouse.java.biz.account.service;
+package nomouse.biz.account.service;
 
-import nomouse.java.biz.account.entity.User;
-import nomouse.java.biz.account.repository.UserDao;
+import nomouse.biz.account.entity.User;
+import nomouse.biz.account.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

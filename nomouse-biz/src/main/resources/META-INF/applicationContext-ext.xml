@@ -4,9 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-
-    <import resource="shiro/applicationContext-shiro.xml"/>
     <!--
+    <import resource="shiro/applicationContext-shiro.xml"/>
+
     <import resource="cache/applicationContext-redis.xml" />
 
     <import resource="cache/applicationContext-memcached.xml"/>

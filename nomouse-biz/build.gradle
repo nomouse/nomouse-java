@@ -12,6 +12,8 @@ dependencies {
     compile("org.springframework:spring-jdbc:${springVersion}")
     compile("org.springframework:spring-orm:${springVersion}")
 
+    compile("hsqldb:hsqldb:${hsqldbVersion}")
+
     compile("mysql:mysql-connector-java:${mysqlJdbcVersion}")
     compile("org.apache.tomcat:tomcat-jdbc:${tomcatVersion}")
     compile("com.googlecode.log4jdbc:log4jdbc:${log4jdbcVersion}")
