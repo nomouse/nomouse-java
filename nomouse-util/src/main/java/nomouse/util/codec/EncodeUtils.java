@@ -1,10 +1,10 @@
 package nomouse.util.codec;
 
+import nomouse.util.StringUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-
-import static com.lianxi.core.util.StringUtils.UTF8;
 
 /**
  * 编解码工具类，支持十六进制编解码和url编解码
@@ -40,7 +40,7 @@ public class EncodeUtils {
      * URL解码
      */
     public static String urlEncode(String input) {
-        return urlEncode(input, UTF8);
+        return urlEncode(input, StringUtils.UTF8);
     }
 
     /**
@@ -59,7 +59,7 @@ public class EncodeUtils {
      * URL解码
      */
     public static String urlDecode(String input) {
-        return urlDecode(input, UTF8);
+        return urlDecode(input, StringUtils.UTF8);
     }
 
     /**
