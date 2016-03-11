@@ -1,10 +1,5 @@
 package nomouse.util;
 
-import java.text.DecimalFormat;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-
 /**
  * 数字辅助类
  *
@@ -12,50 +7,31 @@ import java.util.Set;
  */
 public class NumberUtils {
 
-    /**
-     * 数字格式，用来生成6位验证码，首位可以为0
-     */
-    public static final DecimalFormat CODE_FORMAT = new DecimalFormat("000000");
 
     /**
-     * 从0到{@code end}范围内(包含0但不包含{@code end}),随机生成多个不重复的数字,如果{@code size}>={@code end}的话返回所有
+     * 等同于NumberUtils.toInt(value,0)
      */
-    public static Set<Integer> randomSet(int end, int size) {
-        int resultSize = Math.min(end, size);
-        Set<Integer> set = new HashSet<>(resultSize);
-
-        Random random = new Random();
-        while (set.size() < resultSize) {
-            set.add(random.nextInt(end));
-        }
-
-        return set;
-    }
-
-    /**
-     * 从0到{@code end}范围内的数字
-     */
-    public static Integer random(int end) {
-        Random random = new Random();
-        return random.nextInt(end);
+    public static int toInt(Object value) {
+        return toInt(value, 0);
     }
 
     /**
      * <p>
-     * Object转int
+     * Object转int，如果传入值为{@code null}或者非int类型则返回默认值
      * </p>
      * <pre>
-     * NumberUtils.parseInt(Null) = 0
-     * NumberUtils.parseInt("") = 0
-     * NumberUtils.parseInt("df") = 0
-     * NumberUtils.parseInt("123") = 123
+     * NumberUtils.toInt(Null) = 0
+     * NumberUtils.toInt("") = 0
+     * NumberUtils.toInt("df") = 0
+     * NumberUtils.toInt("123") = 123
      * </pre>
      *
-     * @param value
-     * @return
+     * @param value        传入对象，可以为{@code null}
+     * @param defaultValue 默认值
+     * @return 返回值
      */
-    public static int parseInt(Object value) {
-        int result = 0;
+    public static int toInt(Object value, int defaultValue) {
+        int result;
         if (value != null) {
             if (value instanceof Number) {
                 result = ((Number) value).intValue();
@@ -64,28 +40,39 @@ public class NumberUtils {
                     result = Integer.parseInt(value.toString());
                 } catch (Exception e) {
                     //转化出错不处理
+                    result = defaultValue;
                 }
             }
+        } else {
+            result = defaultValue;
         }
         return result;
     }
 
     /**
+     * 等同于NumberUtils.toLong(value,0)
+     */
+    public static long toLong(Object value) {
+        return toLong(value, 0);
+    }
+
+    /**
      * <p>
-     * Object转long
+     * Object转long，，如果传入值为{@code null}或者非long类型返回默认值
      * </p>
      * <pre>
-     * NumberUtils.parseInt(Null) = 0
-     * NumberUtils.parseInt("") = 0
-     * NumberUtils.parseInt("df") = 0
-     * NumberUtils.parseInt("123") = 123
+     * NumberUtils.toLong(Null) = 0
+     * NumberUtils.toLong("") = 0
+     * NumberUtils.toLong("df") = 0
+     * NumberUtils.toLong("123111111111") = 123
      * </pre>
      *
-     * @param value
-     * @return
+     * @param value        传入对象，可以为{@code null}
+     * @param defaultValue 默认值
+     * @return 返回值
      */
-    public static long parseLong(Object value) {
-        long result = 0;
+    public static long toLong(Object value, long defaultValue) {
+        long result;
         if (value != null) {
             if (value instanceof Number) {
                 result = ((Number) value).longValue();
@@ -94,28 +81,40 @@ public class NumberUtils {
                     result = Long.parseLong(value.toString());
                 } catch (Exception e) {
                     //转化出错不处理
+                    result = defaultValue;
                 }
             }
+        } else {
+            result = defaultValue;
         }
         return result;
     }
 
+
+    /**
+     * 等同于NumberUtils.toDouble(value,0)
+     */
+    public static double toDouble(Object value) {
+        return toDouble(value, 0);
+    }
+
     /**
      * <p>
-     * Object转double
+     * Object转double，如果传入值为{@code null}或者非double类型返回默认值
      * </p>
      * <pre>
-     * NumberUtils.parseInt(Null) = 0.0
-     * NumberUtils.parseInt("") = 0.0
-     * NumberUtils.parseInt("df") = 0.0
-     * NumberUtils.parseInt("123") = 123.0
+     * NumberUtils.toDouble(Null) = 0.0
+     * NumberUtils.toDouble("") = 0.0
+     * NumberUtils.toDouble("df") = 0.0
+     * NumberUtils.toDouble("123") = 123.0
      * </pre>
      *
-     * @param value
-     * @return
+     * @param value        传入对象，可以为{@code null}
+     * @param defaultValue 默认值
+     * @return 返回值
      */
-    public static double parseDouble(Object value) {
-        double result = 0;
+    public static double toDouble(Object value, double defaultValue) {
+        double result;
         if (value != null) {
             if (value instanceof Number) {
                 result = ((Number) value).doubleValue();
@@ -124,8 +123,11 @@ public class NumberUtils {
                     result = Double.parseDouble(value.toString());
                 } catch (Exception e) {
                     //转化出错不处理
+                    result = defaultValue;
                 }
             }
+        } else {
+            result = defaultValue;
         }
         return result;
     }

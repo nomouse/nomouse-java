@@ -24,9 +24,8 @@ public class StringUtils {
 
     /**
      * <p>
-     * 检查是否是空("")或者null.
+     * 检查字符串是否是空("")或者null.
      * </p>
-     * <p/>
      * <pre>
      * StringUtils.isEmpty(null)      = true
      * StringUtils.isEmpty("")        = true
@@ -34,16 +33,8 @@ public class StringUtils {
      * StringUtils.isEmpty("bob")     = false
      * StringUtils.isEmpty("  bob  ") = false
      * </pre>
-     * <p/>
-     * <p>
-     * NOTE: This method changed in Lang version 2.0. It no longer trims the
-     * CharSequence. That functionality is available in isBlank().
-     * </p>
      *
-     * @param cs the CharSequence to check, may be null
-     * @return {@code true} if the CharSequence is empty or null
-     * @since 3.0 Changed signature from isEmpty(String) to
-     * isEmpty(CharSequence)
+     * @param cs 被检查的字符串，可能为null
      */
     public static boolean isEmpty(final CharSequence cs) {
         return cs == null || cs.length() == 0;
@@ -51,9 +42,8 @@ public class StringUtils {
 
     /**
      * <p>
-     * 检查是否不是空("")或者null.
+     * 检查字符串是否不是空("")或者null.
      * </p>
-     * <p/>
      * <pre>
      * StringUtils.isNotEmpty(null)      = false
      * StringUtils.isNotEmpty("")        = false
@@ -62,10 +52,7 @@ public class StringUtils {
      * StringUtils.isNotEmpty("  bob  ") = true
      * </pre>
      *
-     * @param cs the CharSequence to check, may be null
-     * @return {@code true} if the CharSequence is not empty and not null
-     * @since 3.0 Changed signature from isNotEmpty(String) to
-     * isNotEmpty(CharSequence)
+     * @param cs 被检查的字符串，可能为null
      */
     public static boolean isNotEmpty(final CharSequence cs) {
         return !StringUtils.isEmpty(cs);
@@ -73,7 +60,7 @@ public class StringUtils {
 
     /**
      * <p>
-     * 比较两个string
+     * 比较两个string的大小，依次是长度>从高到低位的ascii码
      * </p>
      * <pre>
      * StringUtils.compare(null,null)  = 0
@@ -84,9 +71,9 @@ public class StringUtils {
      * StringUtils.compare("ac","ac ")  = -1
      * </pre>
      *
-     * @param left
-     * @param right
-     * @return 0
+     * @param left  左边参数
+     * @param right 右边参数
+     * @return 0代表相等, 1代表左边大，-1左边小
      */
     public static int compare(String left, String right) {
         // 默认相等
@@ -123,12 +110,23 @@ public class StringUtils {
 
     /**
      * <p>
-     * 判断两个string是否值相等
+     * 判断两个string是否值相等（区分大小写），如果相等返回{@code true}，如果都为{@code null}也认为相等
      * </p>
+     * <pre>
+     * StringUtils.equals(null, null)   = true
+     * StringUtils.equals(null, "abc")  = false
+     * StringUtils.equals("abc", null)  = false
+     * StringUtils.equals("abc", "abc") = true
+     * StringUtils.equals("abc", "ABC") = false
+     * </pre>
+     *
+     * @param a 第一个字符串，可能为{@code null}
+     * @param b 第二个字符串，可能为{@code null}
      */
     public static boolean equals(String a, String b) {
-        if (a == b)
+        if (a == b) {
             return true;
+        }
         int length;
         if (a != null && b != null && (length = a.length()) == b.length()) {
             if (a instanceof String && b instanceof String) {

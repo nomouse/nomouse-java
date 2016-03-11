@@ -116,7 +116,7 @@ public class CollectionUtils {
         int resultSize = Math.min(poolSize, size);
         List result = new ArrayList(resultSize);
 
-        Set<Integer> resultIndexSet = NumberUtils.randomSet(poolSize, resultSize);
+        Set<Integer> resultIndexSet = RandomUtils.randomSet(poolSize, resultSize);
         for (Integer index : resultIndexSet) {
             result.add(list.get(index));
         }
