@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  *******************************************************************************/
-package nomouse.util;
+package nomouse.util.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

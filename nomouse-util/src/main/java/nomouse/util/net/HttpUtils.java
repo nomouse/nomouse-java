@@ -1,4 +1,4 @@
-package nomouse.util.http;
+package nomouse.util.net;
 
 import nomouse.util.json.JacksonUtils;
 import org.apache.commons.io.IOUtils;

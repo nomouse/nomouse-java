@@ -1,4 +1,4 @@
-package nomouse.util;
+package nomouse.util.thread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

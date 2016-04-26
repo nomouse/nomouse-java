@@ -1,6 +1,13 @@
 package nomouse.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 集合操作辅助
@@ -12,21 +19,22 @@ public class CollectionUtils {
     /**
      * 提取集合中的对象的两个属性, 组合成Map.
      *
-     * @param collection        来源集合.
+     * @param collection        源集合
      * @param keyPropertyName   要提取为Map中的Key值的属性名.
      * @param valuePropertyName 要提取为Map中的Value值的属性名.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static Map extractToMap(final Collection collection, final String keyPropertyName,
                                    final String valuePropertyName) {
         Map map = new HashMap(collection.size());
 
         try {
             for (Object obj : collection) {
-                map.put(ReflectUtils.getFieldValue(obj, keyPropertyName),
-                        ReflectUtils.getFieldValue(obj, valuePropertyName));
+                map.put(ReflectionUtils.getFieldValue(obj, keyPropertyName),
+                        ReflectionUtils.getFieldValue(obj, valuePropertyName));
             }
         } catch (Exception e) {
-            throw ReflectUtils.convertReflectionExceptionToUnchecked(e);
+            throw ReflectionUtils.convertReflectionExceptionToUnchecked(e);
         }
 
         return map;
@@ -38,15 +46,16 @@ public class CollectionUtils {
      * @param collection   来源集合.
      * @param propertyName 要提取的属性名.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static List extractToList(final Collection collection, final String propertyName) {
         List list = new ArrayList(collection.size());
 
         try {
             for (Object obj : collection) {
-                list.add(ReflectUtils.getFieldValue(obj, propertyName));
+                list.add(ReflectionUtils.getFieldValue(obj, propertyName));
             }
         } catch (Exception e) {
-            throw ReflectUtils.convertReflectionExceptionToUnchecked(e);
+            throw ReflectionUtils.convertReflectionExceptionToUnchecked(e);
         }
 
         return list;
@@ -58,15 +67,16 @@ public class CollectionUtils {
      * @param collection   来源集合.
      * @param propertyName 要提取的属性名.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static Set extractToSet(final Collection collection, final String propertyName) {
         Set set = new HashSet(collection.size());
 
         try {
             for (Object obj : collection) {
-                set.add(ReflectUtils.getFieldValue(obj, propertyName));
+                set.add(ReflectionUtils.getFieldValue(obj, propertyName));
             }
         } catch (Exception e) {
-            throw ReflectUtils.convertReflectionExceptionToUnchecked(e);
+            throw ReflectionUtils.convertReflectionExceptionToUnchecked(e);
         }
 
         return set;
@@ -79,22 +89,53 @@ public class CollectionUtils {
      * @param propertyName 要提取的属性名.
      * @param separator    分隔符.
      */
-    public static String extractToString(final Collection collection, final String propertyName, final String separator) {
-        List list = extractToList(collection, propertyName);
-        return StringUtils.join(list, separator);
+    public static String extractToString(final Collection<?> collection, final String propertyName,
+                                         final String separator) {
+        List<?> list = extractToList(collection, propertyName);
+        return convertToString(list, separator);
     }
 
     /**
      * 转换Collection所有元素(通过toString())为String, 中间以 separator分隔。
      */
-    public static String convertToString(final Collection collection, final String separator) {
-        return StringUtils.join(collection, separator);
+    public static String convertToString(final Collection<?> collection, final String separator) {
+
+        Iterator<?> iterator = collection.iterator();
+        // handle null, zero and one elements before building a buffer
+        if (iterator == null) {
+            return null;
+        }
+        if (!iterator.hasNext()) {
+            return "";
+        }
+        final Object first = iterator.next();
+        if (!iterator.hasNext()) {
+            final String result = first.toString();
+            return result;
+        }
+
+        // two or more elements
+        final StringBuilder buf = new StringBuilder(256); // Java default is 16, probably too small
+        if (first != null) {
+            buf.append(first);
+        }
+
+        while (iterator.hasNext()) {
+            if (separator != null) {
+                buf.append(separator);
+            }
+            final Object obj = iterator.next();
+            if (obj != null) {
+                buf.append(obj);
+            }
+        }
+        return buf.toString();
     }
 
     /**
-     * 转换Collection所有元素(通过toString())为String,
-     * 每个元素的前面加入prefix，后面加入postfix，如<div>mymessage</div>。
+     * 转换Collection所有元素(通过toString())为String, 每个元素的前面加入prefix，后面加入postfix，如<div>mymessage</div>。
      */
+    @SuppressWarnings({"rawtypes"})
     public static String convertToString(final Collection collection, final String prefix, final String postfix) {
         StringBuilder builder = new StringBuilder();
         for (Object o : collection) {
@@ -104,29 +145,9 @@ public class CollectionUtils {
     }
 
     /**
-     * 从一个列表中随机取出n个不重复的元素返回
-     */
-    public static List randomFromList(final List list, final int size) {
-
-        if (isEmpty(list)) {
-            return new ArrayList();
-        }
-
-        int poolSize = list.size();
-        int resultSize = Math.min(poolSize, size);
-        List result = new ArrayList(resultSize);
-
-        Set<Integer> resultIndexSet = RandomUtils.randomSet(poolSize, resultSize);
-        for (Integer index : resultIndexSet) {
-            result.add(list.get(index));
-        }
-
-        return result;
-    }
-
-    /**
      * 判断是否为空.
      */
+    @SuppressWarnings({"rawtypes"})
     public static boolean isEmpty(Collection collection) {
         return (collection == null || collection.isEmpty());
     }
@@ -134,6 +155,7 @@ public class CollectionUtils {
     /**
      * 判断是否为空.
      */
+    @SuppressWarnings({"rawtypes"})
     public static boolean isEmpty(Map map) {
         return (map == null) || map.isEmpty();
     }
@@ -141,6 +163,7 @@ public class CollectionUtils {
     /**
      * 判断是否为空.
      */
+    @SuppressWarnings({"rawtypes"})
     public static boolean isNotEmpty(Collection collection) {
         return !isEmpty(collection);
     }
@@ -184,7 +207,7 @@ public class CollectionUtils {
      * 返回a+b的新List.
      */
     public static <T> List<T> union(final Collection<T> a, final Collection<T> b) {
-        List<T> result = new ArrayList<>(a);
+        List<T> result = new ArrayList<T>(a);
         result.addAll(b);
         return result;
     }
@@ -193,7 +216,7 @@ public class CollectionUtils {
      * 返回a-b的新List.
      */
     public static <T> List<T> subtract(final Collection<T> a, final Collection<T> b) {
-        List<T> list = new ArrayList<>(a);
+        List<T> list = new ArrayList<T>(a);
         for (T element : b) {
             list.remove(element);
         }
@@ -205,7 +228,7 @@ public class CollectionUtils {
      * 返回a与b的交集的新List.
      */
     public static <T> List<T> intersection(Collection<T> a, Collection<T> b) {
-        List<T> list = new ArrayList<>();
+        List<T> list = new ArrayList<T>();
 
         for (T element : a) {
             if (b.contains(element)) {

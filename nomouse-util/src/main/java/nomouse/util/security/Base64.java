@@ -1,4 +1,4 @@
-package nomouse.util.codec;
+package nomouse.util.security;
 
 /**
  * <p>Encodes and decodes to and from Base64 notation.</p>

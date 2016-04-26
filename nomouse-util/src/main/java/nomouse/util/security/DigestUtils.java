@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  *******************************************************************************/
-package nomouse.util.codec;
+package nomouse.util.security;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

@@ -1,4 +1,4 @@
-package nomouse.util.codec;
+package nomouse.util.security;
 
 
 import nomouse.util.StringUtils;

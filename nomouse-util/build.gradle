@@ -3,10 +3,14 @@ dependencies {
 
     compile("com.google.guava:guava:${guavaVersion}")
 
+    //json相关
     compile("com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
     compile("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
     compile("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
 
+    compile("com.alibaba:fastjson:1.1.23")
+
+    //http相关
     compile("org.apache.httpcomponents:httpclient:${httpClientVersion}")
     compile("org.apache.httpcomponents:httpmime:${httpClientVersion}")
 

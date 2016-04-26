@@ -1,4 +1,6 @@
-package nomouse.util;
+package nomouse.util.time;
+
+import nomouse.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;

@@ -2,7 +2,7 @@ package nomouse.java.biz.account.repository;
 
 import nomouse.biz.account.entity.User;
 import nomouse.biz.account.repository.UserDao;
-import nomouse.util.TimeUtils;
+import nomouse.util.time.TimeUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
